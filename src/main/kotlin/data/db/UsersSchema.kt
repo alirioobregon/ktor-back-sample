@@ -12,6 +12,8 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.javatime.CurrentDateTime
+import org.jetbrains.exposed.sql.javatime.datetime
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.update
@@ -104,6 +106,8 @@ class UsersSchema() {
         val name = varchar("name", 50)
         val email = varchar("email", 100).uniqueIndex()
         val age = integer("age")
+
+        val createdAt = datetime("created_at").defaultExpression(CurrentDateTime)
 
         override val primaryKey = PrimaryKey(id)
     }
