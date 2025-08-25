@@ -1,31 +1,30 @@
 package com.example
 
-import TaskRepository
-import com.example.models.Priority
-import com.example.models.Task
-import com.example.data.repository.TaskRepositoryImpl
+import com.example.data.repository.PostgresTaskRepository
+import com.example.presentation.routes.userRoutes
+import domain.repository.TaskRepository
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.staticResources
 import io.ktor.server.plugins.statuspages.*
-import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.serialization.SerializationException
-import routes.taskRoutes
+import presentation.routes.taskRoutes
 import java.lang.Exception
 
-fun Application.configureRouting(repository: TaskRepository) {
+fun Application.configureRouting() {
     install(StatusPages) {
         exception<Throwable> { call, cause ->
             call.respondText(text = "500: $cause", status = HttpStatusCode.InternalServerError)
         }
     }
+
+
     routing {
 
         staticResources("static", "static")
 
-//        val taskRepositoryImpl: TaskRepository = TaskRepositoryImpl()
+//        val taskRepositoryImpl: domain.repository.TaskRepository = TaskRepositoryImpl()
 
 
         get("/") {
@@ -54,8 +53,8 @@ fun Application.configureRouting(repository: TaskRepository) {
             }
         }
 
-        taskRoutes(repository)
-
+        taskRoutes()
+        userRoutes()
 
     }
 }

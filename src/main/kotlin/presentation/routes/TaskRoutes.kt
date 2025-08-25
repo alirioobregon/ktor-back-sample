@@ -1,8 +1,10 @@
-package routes
+package presentation.routes
 
-import TaskRepository
+import com.example.data.repository.PostgresTaskRepository
+import domain.repository.TaskRepository
 import com.example.models.Priority
 import com.example.models.Task
+import domain.usecase.TaskUseCase
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
@@ -12,11 +14,15 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import kotlinx.serialization.SerializationException
 
-fun Route.taskRoutes(repository: TaskRepository) {
+fun Route.taskRoutes() {
+
+    val taskRepository = PostgresTaskRepository()
+
+    val taskUseCase = TaskUseCase(taskRepository)
 
     route("/tasks") {
         get {
-            val tasks = repository.allTasks()
+            val tasks = taskUseCase.allTasks()
             call.respond(tasks)
         }
 
@@ -27,7 +33,7 @@ fun Route.taskRoutes(repository: TaskRepository) {
                 return@get
             }
 
-            val task = repository.taskByName(name)
+            val task = taskUseCase.taskByName(name)
             if (task == null) {
                 call.respond(HttpStatusCode.NotFound)
                 return@get
@@ -42,7 +48,7 @@ fun Route.taskRoutes(repository: TaskRepository) {
             }
             try {
                 val priority = Priority.valueOf(priorityAsText)
-                val tasks = repository.tasksByPriority(priority)
+                val tasks = taskUseCase.tasksByPriority(priority)
 
                 if (tasks.isEmpty()) {
                     call.respond(HttpStatusCode.NotFound)
@@ -58,7 +64,7 @@ fun Route.taskRoutes(repository: TaskRepository) {
         post {
             try {
                 val task = call.receive<Task>()
-                repository.addTask(task)
+                taskUseCase.addTask(task)
                 call.respond(HttpStatusCode.Created)
             } catch (ex: IllegalStateException) {
                 call.respond(HttpStatusCode.BadRequest)

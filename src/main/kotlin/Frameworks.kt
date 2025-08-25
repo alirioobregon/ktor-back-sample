@@ -1,5 +1,6 @@
 package com.example
 
+import domain.usecase.TaskUseCase
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -27,6 +28,9 @@ fun Application.configureFrameworks() {
                     println(environment.log.info("Hello, World!"))
                 }
             }
+
+            single { TaskUseCase(get()) }
+
         })
     }
 }

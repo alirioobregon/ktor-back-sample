@@ -2,13 +2,10 @@ package com.example.data.db
 
 import com.example.models.Priority
 import com.example.models.Task
-import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.Transaction
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
 object TaskTable : IntIdTable("task") {
     val name = varchar("name", 50)

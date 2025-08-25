@@ -1,7 +1,7 @@
 package com.example.data.repository
 
 
-import TaskRepository
+import domain.repository.TaskRepository
 import com.example.core.utils.Utils.suspendTransaction
 import com.example.data.db.TaskDAO
 import com.example.data.db.TaskTable

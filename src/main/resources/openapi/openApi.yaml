@@ -1,0 +1,173 @@
+openapi: "3.0.3"
+info:
+  title: "Application API"
+  description: "Application API"
+  version: "1.0.0"
+servers:
+  - url: "http://0.0.0.0:9292"
+tags:
+  - name: tasks
+    description: Operaciones relacionadas con tareas
+  - name: users
+    description: Operaciones relacionadas con usuarios
+
+paths:
+  /:
+    get:
+      description: "Hello World!"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Hello World!"
+
+  #Task
+  /tasks:
+    get:
+      tags: [ tasks ]
+      summary: "Obtener todas las tareas"
+      description: "Devuelve la lista completa de tareas"
+      responses:
+        "200":
+          description: "Lista de tareas"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Task"
+
+    post:
+      tags: [ tasks ]
+      summary: "Crear una nueva tarea"
+      description: "Agrega una tarea a la base de datos"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Task"
+      responses:
+        "201":
+          description: "Tarea creada correctamente"
+        "400":
+          description: "Error en los datos de entrada"
+
+  /tasks/byName/{taskName}:
+    get:
+      tags: [ tasks ]
+      summary: "Obtener tarea por nombre"
+      parameters:
+        - name: taskName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Tarea encontrada"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "404":
+          description: "No se encontró la tarea"
+
+  /tasks/byPriority/{priority}:
+    get:
+      tags: [ tasks ]
+      summary: "Obtener tareas por prioridad"
+      parameters:
+        - name: priority
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [ LOW, MEDIUM, HIGH ]
+      responses:
+        "200":
+          description: "Lista de tareas con esa prioridad"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Task"
+        "400":
+          description: "Prioridad inválida"
+        "404":
+          description: "No se encontraron tareas"
+
+  #Users
+  /users:
+    get:
+      tags: [ users ]
+      summary: "Obtener todos los users"
+      description: "Devuelve la lista completa de users"
+      responses:
+        "200":
+          description: "Lista de users"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Users"
+
+    post:
+      tags: [ users ]
+      summary: "Crear un nuevo user"
+      description: "Agrega un user a la base de datos"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Users"
+      responses:
+        "201":
+          description: "Tarea creada correctamente"
+        "400":
+          description: "Error en los datos de entrada"
+
+components:
+  schemas:
+    Task:
+      type: object
+      properties:
+        #        id:
+        #          type: integer
+        #          example: 1
+        name:
+          type: string
+          example: "Comprar pan"
+        description:
+          type: string
+          example: "Cook the dinner"
+        priority:
+          type: string
+          example: "High"
+
+    Users:
+      type: object
+      properties:
+        id:
+          type: string
+          example: ""
+        name:
+          type: string
+          example: "Ali"
+        age:
+          type: integer
+          example: 18
+        email:
+          type: string
+          example: "ali@"
+        roleId:
+          type: string
+          example: "ffb88604-9265-4e38-86c6-7c98f9a46f57"

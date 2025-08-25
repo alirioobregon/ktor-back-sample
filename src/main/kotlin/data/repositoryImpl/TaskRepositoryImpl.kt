@@ -1,6 +1,6 @@
 package com.example.data.repository
 
-import TaskRepository
+import domain.repository.TaskRepository
 import com.example.models.Priority
 import com.example.models.Task
 
